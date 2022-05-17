@@ -3,7 +3,7 @@ FROM finkandreas/dcomex-prototype_base:1.0
 COPY . /src
 
 RUN cd /src/korali \
-  && CC=gcc CXX=g++ meson setup build --prefix=/usr/local --buildtype=release -Donednn=true -Dmpi=true \
+  && CC=gcc CXX=g++ meson setup build --prefix=/usr/local --buildtype=release -Dmpi=true \
   && ninja -C build \
   && meson install -C build
 
