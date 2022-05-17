@@ -4,6 +4,7 @@ stages:
 
 variables:
   PERSIST_IMAGE_NAME: ${CSCS_REGISTRY_PATH}/dcomex-prototype:1.0
+  GIT_SUBMODULE_STRATEGY: recursive
 
 build_software:
   tags:
