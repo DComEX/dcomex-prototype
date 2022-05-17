@@ -33,4 +33,4 @@ run_prototype_test:
     SLURM_NTASKS: 1
     PULL_IMAGE: 'YES'
     CSCS_REGISTRY_LOGIN: 'YES'
-    SLURM_TIMELIMIT: '00:05:00'
+    SLURM_TIMELIMIT: '00:15:00'
