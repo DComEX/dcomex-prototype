@@ -26,7 +26,7 @@ namespace ISAAR.MSolve.MSolve4Korali
         Success = 0,
         InvalidArguments = -1,
         FileNotFound = -2,
-        ProcessIdentifierEmpty = -3,
+        OutputFilenameEmpty = -3,
         DuplicateProcessIdentifer = -4,
         InvalidXML = -5,
         InvalidMesh = -6,
@@ -50,16 +50,16 @@ namespace ISAAR.MSolve.MSolve4Korali
         private const string helpMessage =
 @"Executes MSolve as part of Korali software, solving a physics problem according to certain specifications.
 
-Korali4MSolve inputfile processidentifier
+Korali4MSolve inputfile outputfile_Name
 
   inputfile          Specifies the XML file with the parameters of the physics problem
-  processidentifier  Identifier, used as a suffix for the MSolve output
+  outputfile         Specifies the name and directory for the output XML file
 
 ";
         #endregion
         private static ProblemType problemType = ProblemType.Unknown;
         private static string inputFile = String.Empty;
-        private static string processIdentifier = String.Empty;
+        private static string outputFile = String.Empty;
         private static MeshParameters meshParameters;
         private static ThermalProblemParameters thermalProblemParameters;
         private static StructuralProblemParameters structuralProblemParameters;
@@ -73,18 +73,20 @@ Korali4MSolve inputfile processidentifier
         /// <returns>True if arguments are valid and false if not</returns>
         private static bool InitializeEnvironment(string[] args)
         {
-            // string firstArgument = args.FirstOrDefault();
-            // if (args.Length != 2 || firstArgument == null || (firstArgument != null && (firstArgument == "/?" || firstArgument == "/h")))
-            // {
-            //     Environment.ExitCode = (int)ExitCode.InvalidArguments;
-            //     Console.WriteLine("Invalid Arguments!\n" + helpMessage);
-            //     return false;
-            // }
+            Console.WriteLine("InputFile: "+args[0].Trim());
+            Console.WriteLine("OutputFile: "+args[1].Trim());
+            string firstArgument = args.FirstOrDefault();
+            if (args.Length != 2 || firstArgument == null)
+            {
+                Environment.ExitCode = (int)ExitCode.InvalidArguments;
+                Console.WriteLine("Invalid Arguments!\n" + helpMessage);
+                return false;
+            }
 
-            // inputFile = args[0].Trim();
-            // processIdentifier = args[1].Trim();
-            inputFile = Path.Combine("/msolve", "ioDir", "model.xml");
-            processIdentifier = "1";
+            inputFile = args[0].Trim();
+            outputFile = args[1].Trim();
+            // inputFile = Path.Combine("/msolve", "ioDir", "model.xml");
+            // processIdentifier = "1";
             if (File.Exists(inputFile) == false)
             {
                 Environment.ExitCode = (int)ExitCode.FileNotFound;
@@ -92,10 +94,10 @@ Korali4MSolve inputfile processidentifier
                 return false;
             }
 
-            if (String.IsNullOrEmpty(processIdentifier))
+            if (String.IsNullOrEmpty(outputFile))
             {
-                Environment.ExitCode = (int)ExitCode.ProcessIdentifierEmpty;
-                Console.WriteLine(@"Process identifier is empty.");
+                Environment.ExitCode = (int)ExitCode.OutputFilenameEmpty;
+                Console.WriteLine(@"Output file name is empty.");
                 return false;
             }
 
@@ -252,8 +254,8 @@ Korali4MSolve inputfile processidentifier
         {
             Console.WriteLine("Writing output to xml...");
             Environment.ExitCode = (int)ExitCode.ErrorWritingOutput;
-            string outputFileName = $"MSolveOutput-{processIdentifier}.xml";
-            string outputFile = Path.Combine("/msolve", "ioDir", outputFileName);
+            // string outputFileName = $"MSolveOutput-{processIdentifier}.xml";
+            // string outputFile = Path.Combine("/msolve", "ioDir", outputFileName);
             var settings = new XmlWriterSettings
             {
                 Indent = true,
