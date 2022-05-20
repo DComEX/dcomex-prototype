@@ -1,0 +1,11 @@
+stages:
+  - build
+
+build_baseimage:
+  stage: build
+  tags: [docker_jfrog]
+  script:
+    - "true"
+  variables:
+    DOCKERFILE: ci/Dockerfile_base
+    PERSIST_IMAGE_NAME: $CSCS_REGISTRY_PATH/dcomex-prototype_base:1.0
