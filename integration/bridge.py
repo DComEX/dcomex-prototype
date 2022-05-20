@@ -82,3 +82,37 @@ def run_msolve_mock(xcoords, ycoords,
 
     os.chdir(basedir)
     return x, y, T
+
+
+
+def run_msolve(xcoords, ycoords,
+               generation: int,
+               sample_id: int,
+               parameters: list):
+
+    basedir = os.getcwd()
+    run_dir = os.path.join(basedir,
+                           f"gen_{str(generation).zfill(6)}",
+                           f"sample_{str(sample_id).zfill(6)}")
+
+    os.makedirs(run_dir, exist_ok=True)
+    os.chdir(run_dir)
+
+    input_file  = os.path.join(run_dir, "config.xml")
+    output_file = os.path.join(run_dir, "result.xml")
+    stdout_file = open(os.path.join(run_dir, "stdout.txt"), "w")
+    stderr_file = open(os.path.join(run_dir, "stderr.txt"), "w")
+
+    write_config_file(xcoords, ycoords, parameters, input_file)
+
+    msolve_path = os.path.join(script_dir, '..', 'msolve', 'MSolveApp',
+                               'ISAAR.MSolve.MSolve4Korali', 'bin', 'Debug', 'net6.0',
+                               'ISAAR.MSolve.MSolve4Korali')
+
+    subprocess.call([msolve_path, input_file, output_file],
+                    stdout=stdout_file, stderr=stderr_file)
+
+    x, y, T = parse_results(output_file)
+
+    os.chdir(basedir)
+    return x, y, T
