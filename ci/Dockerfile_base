@@ -2,12 +2,22 @@ FROM docker.io/nvidia/cuda:11.2.0-cudnn8-devel-ubuntu20.04
 
 ARG MPICH_VERSION=3.1.4
 
-RUN env TZ=Europe/Zurich DEBIAN_FRONTEND=noninteractive apt-get update \
-    && env TZ=Europe/Zurich DEBIAN_FRONTEND=noninteractive apt-get -y --fix-missing upgrade \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN apt-get -y install build-essential \
-    wget \
+RUN apt-get update \
+  && env TZ=Europe/Zurich DEBIAN_FRONTEND=noninteractive apt-get -y --fix-missing upgrade \
+  && env TZ=Europe/Zurich DEBIAN_FRONTEND=noninteractive apt-get -y install \
+       build-essential \
+       wget \
+       libgsl-dev \
+       python3-dev \
+       python3-pip \
+       python3-numpy \
+       python3-matplotlib \
+       python3-scipy \
+       python3-xlrd \
+       python3-pandas \
+       libmkldnn-dev \
+       apt-transport-https \
+       pkg-config \
   && rm -rf /var/lib/apt/lists/*
 
 RUN cd /tmp \
@@ -23,25 +33,10 @@ RUN cd /tmp \
   && rm -Rf mpich-${MPICH_VERSION} \
   && rm -Rf mpich-${MPICH_VERSION}.tar.gz
 
-RUN env TZ=Europe/Zurich DEBIAN_FRONTEND=noninteractive \
-    apt-get -y install libgsl-dev \
-    python3-dev \
-    python3-pip \
-    python3-numpy \
-    python3-matplotlib \
-    python3-scipy \
-    python3-xlrd \
-    python3-pandas \
-    libmkldnn-dev \
-    apt-transport-https \
-    pkg-config \
-  && rm -rf /var/lib/apt/lists/*
-
 RUN python3 -m pip install meson \
     ninja \
     cmake \
     pybind11
-
 
 RUN cd /tmp \
   && wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
