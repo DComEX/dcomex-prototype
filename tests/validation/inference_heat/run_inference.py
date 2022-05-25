@@ -47,6 +47,9 @@ if __name__ == '__main__':
 
     e = korali.Experiment()
 
+    e["Random Seed"] = 12345
+    e["Problem"]["Type"] = "Bayesian/Reference"
+
     e["Problem"]["Type"] = "Bayesian/Reference"
     e["Problem"]["Likelihood Model"] = "Normal"
     e["Problem"]["Reference Data"] = Tref.tolist()
@@ -94,7 +97,7 @@ if __name__ == '__main__':
     ref_theta1 = 0.2
     ref_theta2 = 0.7
 
-    tolerance = 1e-2
+    tolerance = 5e-2
 
     print("Inferred parameters:")
     print(f"theta1 = {mean_theta1}, theta2 = {mean_theta2}")
