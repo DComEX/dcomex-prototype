@@ -23,6 +23,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--num-cores", type=int, default=1, help="number of cores used by korali.")
+    parser.add_argument("--num-samples", type=int, default=1000, help="number of TMCMC samples per generation.")
     args = parser.parse_args()
     num_cores = args.num_cores
 
@@ -52,7 +53,7 @@ if __name__ == '__main__':
     e["Problem"]["Computational Model"] = model
 
     e["Solver"]["Type"] = "Sampler/TMCMC"
-    e["Solver"]["Population Size"] = 1000
+    e["Solver"]["Population Size"] = args.num_samples
 
     e["Distributions"][0]["Name"] = "Uniform01"
     e["Distributions"][0]["Type"] = "Univariate/Uniform"
@@ -82,3 +83,21 @@ if __name__ == '__main__':
         k["Conduit"]["Concurrent Jobs"] = num_cores
 
     k.run(e)
+
+
+    # check the results
+    samples = np.array(e["Results"]["Posterior Sample Database"])
+
+    mean_theta1 = np.mean(samples[:,0])
+    mean_theta2 = np.mean(samples[:,1])
+
+    ref_theta1 = 0.2
+    ref_theta2 = 0.7
+
+    tolerance = 1e-2
+
+    print("Inferred parameters:")
+    print(f"theta1 = {mean_theta1}, theta2 = {mean_theta2}")
+
+    assert abs(ref_theta1 - mean_theta1) < tolerance
+    assert abs(ref_theta2 - mean_theta2) < tolerance

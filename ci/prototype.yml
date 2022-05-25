@@ -23,6 +23,8 @@ run_prototype_test:
   script:
     - cd /src/tests/units/
     - ./run.sh
+    - cd /src/tests/validation/inference_heat/
+    - ./run_inference.py --num-cores 8 --num-samples 1000
 
   variables:
     USE_MPI: 'YES'
