@@ -87,7 +87,6 @@ if __name__ == '__main__':
 
     k.run(e)
 
-
     # check the results
     samples = np.array(e["Results"]["Posterior Sample Database"])
 
